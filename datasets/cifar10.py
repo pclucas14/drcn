@@ -82,8 +82,8 @@ class CIFAR10(torch.utils.data.Subset):
 
 
 if __name__ == "__main__":
-    cifar_tr = CIFAR10("./data", "train", download=True)
-    cifar_te = CIFAR10("./data", "test", download=True)
+    cifar_tr = CIFAR10("/datadrive/dump", "train", download=True)
+    cifar_te = CIFAR10("/datadrive/dump", "test", download=True)
 
     # sample
     train_samples, test_samples, tr_y, te_y = [], [], [], []
