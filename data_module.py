@@ -24,7 +24,7 @@ class ImageDataModule(LightningDataModule):
             DatasetWrapper(ds, True) for ds in [src_tr, src_val, src_te]
         ]
 
-        if self.args.method in ["drcn", "dcrn-st"]:
+        if self.args.method.startswith('drcn'):
             tgt_ds_class = get_dataset(self.args.target_dataset)
             tgt_tr = tgt_ds_class(self.location, "train", self.args.img_size)
             tgt_val = tgt_ds_class(self.location, "val", self.args.img_size)
