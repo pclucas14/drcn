@@ -3,8 +3,8 @@ import torch
 from torch.utils.data import DataLoader
 from pytorch_lightning import LightningDataModule
 
-from torch.utils.data import Sampler, ConcatDataset
-from src.datasets import get_dataset
+from torch.utils.data import Sampler, ConcatDataset, DataLoader
+from datasets import get_dataset
 from typing import Optional
 
 class ImageDataModule(LightningDataModule):
@@ -41,21 +41,24 @@ class ImageDataModule(LightningDataModule):
         self.train_ds, self.val_ds, self.test_ds = datasets
 
     def train_dataloader(self):
-        sampler = 
+        sampler = None
+        if self.args.no_mix_src_and_tgt:
+            sampler = SeparateShuffleSampler(self.train_ds)
+
         return DataLoader(
             self.train_ds,
             batch_size=self.args.batch_size,
-            shuffle=True,
             num_workers=8,
             pin_memory=True,
             persistent_workers=True,
+            sampler=sampler,
+            shuffle=sampler is None
         )
 
     def val_dataloader(self):
         return DataLoader(
             self.val_ds,
             batch_size=self.args.batch_size * 2,
-            shuffle=True,
             num_workers=8,
             pin_memory=True,
             persistent_workers=True,
@@ -65,7 +68,6 @@ class ImageDataModule(LightningDataModule):
         return DataLoader(
             self.test_ds,
             batch_size=self.args.batch_size * 2,
-            shuffle=True,
             num_workers=8,
             pin_memory=True,
             persistent_workers=True,
