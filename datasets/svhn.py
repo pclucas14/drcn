@@ -34,6 +34,7 @@ class SVHN(torch.utils.data.Subset):
     def get_transform(self, split):
         base = [
             transforms.Resize(self.img_size),
+            transforms.Grayscale()
         ]
 
         if split == "train":

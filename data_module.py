@@ -98,12 +98,16 @@ class SeparateShuffleSampler(Sampler):
 
     def __init__(self, concat_dataset):
         self.dataset = concat_dataset
-        # what's the limit ? 
-        breakpoint()
-        xx = 1
+        self.source_ds, self.target_ds = concat_dataset.datasets
+        assert self.source_ds.is_source and not self.target_ds.is_source
 
     def __len__(self):
         return len(self.dataset)
 
     def __iter__(self):
-        pass        
+        # what's the limit ?
+        src_len, tgt_len = len(self.source_ds), len(self.target_ds)
+        source_shuffled = torch.randperm(src_len)
+        target_shuffled = torch.randperm(tgt_len) + src_len
+        indices = torch.cat((source_shuffled, target_shuffled))
+        return iter(indices) 

@@ -87,6 +87,8 @@ class ImageModel(LightningModule):
         super().__init__()
         self.args = args
 
+        self.save_hyperparameters(vars(args))
+
         # log hyperparameters
         self.encoder = Encoder(args.img_size, args.in_channels, args.fc4, args.fc5)
         self.fc_out = nn.Linear(args.fc5, args.n_classes)

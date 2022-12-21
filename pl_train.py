@@ -22,8 +22,6 @@ def run(args):
             project='drcn-repro',
             name=args.method
         )
-        wandb.config.udpate(args)
-        breakpoint()
     except:
         logger = None
     
