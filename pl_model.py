@@ -122,7 +122,9 @@ class ImageModel(LightningModule):
     def configure_optimizers(self):
         optims = {'adam': torch.optim.Adam, 'rmsprop': torch.optim.RMSprop}
         optim = optims[self.args.optim]
-        return optim(self.parameters(), lr=self.args.lr, weight_decay=5e-6)
+        return optim(
+            self.parameters(), lr=self.args.lr, weight_decay=self.args.weight_decay
+        )
     
     def noisy(self, x):
         gaussian_x = x + torch.rand_like(x) * self.args.noise_std
