@@ -40,25 +40,28 @@ class SVHN(torch.utils.data.Subset):
         if split == "train":
             base += [
                 transforms.RandomAffine(
-                    degrees=(-15, 15), translate=(0.05, 0.1), scale=(0.8, 1.2)
+                    degrees=(-20, 20), # translate=(0., 0.2), # scale=(0.95, 1.05), 
+                    fill=100, resample=2
                 ),
             ]
 
-        base += [transforms.ToTensor()]
+        base += [
+            transforms.ToTensor(), 
+        ]
 
         return transforms.Compose(base)
 
 
 if __name__ == "__main__":
-    svhn_tr = SVHN("./data", "train", download=True)
-    svhn_te = SVHN("./data", "test", download=True)
+    svhn_tr = SVHN("/datadrive/dump", "train", download=True)
+    svhn_te = SVHN("/datadrive/dump", "test", download=True)
 
     # sample
     train_samples = torch.stack(
-        [svhn_tr[i][0] for i in torch.randperm(len(svhn_tr))[:16]]
+        [svhn_tr[i][0] for i in torch.randperm(len(svhn_tr))[:64]]
     )
     test_samples = torch.stack(
-        [svhn_te[i][0] for i in torch.randperm(len(svhn_te))[:16]]
+        [svhn_te[i][0] for i in torch.randperm(len(svhn_te))[:64]]
     )
 
     assert train_samples.max() <= 1 and train_samples.min() >= 0

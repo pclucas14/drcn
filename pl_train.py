@@ -1,4 +1,5 @@
 from args import get_args
+from os.path import join
 
 import pytorch_lightning as pl
 from pytorch_lightning import Trainer, seed_everything
@@ -14,6 +15,7 @@ def run(args):
 
     # model
     model = ImageModel(args)
+    print(model)
 
     try:
         import wandb
@@ -25,12 +27,13 @@ def run(args):
     except:
         logger = None
     
-    # model checkpointing
+    # model checkpointing (best one on src data)
     checkpoint_callback = ModelCheckpoint(
-        monitor="val_src_cls_loss",
-        filename="{epoch:02d}-{val_src_cls_loss:.004f}",
+        monitor="val_src_acc",
+        dirpath=args.output_dir,
+        filename="{epoch:02d}-{val_src_acc:.004f}",
         save_top_k=1,
-        mode="min",
+        mode="max",
     )
     trainer = Trainer(
         gpus=1, # for more than 1 gpu, will need a DistributedSampler
@@ -44,7 +47,7 @@ def run(args):
         limit_val_batches=10 if args.debug else 1.0,
         limit_train_batches=5 if args.debug else 1.0,
         max_epochs=2 if args.debug else args.epochs,
-        replace_sampler_ddp=args.no_mix_src_and_tgt,
+        replace_sampler_ddp=not args.no_mix_src_and_tgt,
     )
     trainer.fit(model, dm)
     trainer.test(model, dm, ckpt_path='best')

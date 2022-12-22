@@ -24,19 +24,18 @@ class ImageDataModule(LightningDataModule):
             DatasetWrapper(ds, True) for ds in [src_tr, src_val, src_te]
         ]
 
-        if self.args.method.startswith('drcn'):
-            tgt_ds_class = get_dataset(self.args.target_dataset)
-            tgt_tr = tgt_ds_class(self.location, "train", self.args.img_size)
-            tgt_val = tgt_ds_class(self.location, "val", self.args.img_size)
-            tgt_te = tgt_ds_class(self.location, "test", self.args.img_size)
-                 
-            tgt_datasets = [
-                DatasetWrapper(ds, False) for ds in [tgt_tr, tgt_val, tgt_te]
-            ]
+        tgt_ds_class = get_dataset(self.args.target_dataset)
+        tgt_tr = tgt_ds_class(self.location, "train", self.args.img_size)
+        tgt_val = tgt_ds_class(self.location, "val", self.args.img_size)
+        tgt_te = tgt_ds_class(self.location, "test", self.args.img_size)
+                
+        tgt_datasets = [
+            DatasetWrapper(ds, False) for ds in [tgt_tr, tgt_val, tgt_te]
+        ]
 
-            datasets = [
-                ConcatDataset([src, tgt]) for src, tgt, in zip(datasets, tgt_datasets)
-            ]
+        datasets = [
+            ConcatDataset([src, tgt]) for src, tgt, in zip(datasets, tgt_datasets)
+        ]
 
         self.train_ds, self.val_ds, self.test_ds = datasets
 

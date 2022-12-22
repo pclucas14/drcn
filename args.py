@@ -26,37 +26,47 @@ def get_args():
     parser.add_argument("--output_dir", type=str, default="/datadrive/dump/")
 
     # model architecture
-    parser.add_argument("--fc4", type=int, default=500)
-    parser.add_argument("--fc5", type=int, default=500)
+    parser.add_argument("--fc4", type=int, default=1000)
+    parser.add_argument("--fc5", type=int, default=1000)
+    parser.add_argument("--batch_norm", action='store_true', default=False)
 
     # optimization
-    parser.add_argument("--lamb", type=float, default=0.5)
+    parser.add_argument("--lamb", type=float, default=0.7)
     parser.add_argument("--epochs", type=int, default=50)
-    parser.add_argument("--lr", type=float, default=1e-4)
+    parser.add_argument("--lr", type=float, default=3e-4)
+    parser.add_argument("--learned_tgt_norm", type=int, default=0)
     parser.add_argument("--max_grad_norm", type=float, default=1)
-    parser.add_argument("--batch_size", type=int, default=64)
+    parser.add_argument("--batch_size", type=int, default=512)
+    parser.add_argument("--noise_std", type=float, default=1e-2)
+    parser.add_argument("--noise_p_drop", type=float, default=0.2)
     parser.add_argument(
         "--no_mix_src_and_tgt",
         action="store_true",
         default=False,
         help="if used, we follow Alg. 1 and go through src dataset, then tgt dataset",
     )
+    parser.add_argument(
+        "--optim", type=str, default='adam', choices=['adam', 'rmsprop']
+    )
 
     args = parser.parse_args()
+
+# CUDA_VISIBLE_DEVICES=1 python pl_train.py --source_dataset svhn --target_dataset mnist --fc4 512 --fc5 512 --lamb 0.7 --batch_size 512 
+# 73.4
 
     # Make sure we are attempting a valid transfer experiment
     ds1, ds2 = sorted([args.source_dataset, args.target_dataset])
     if ds1 == "mnist" and ds2 == "usps":
-        args.img_size = 28
+        args.img_size = 32 # 28
         args.in_channels = 1
         args.n_classes = 10
     elif ds1 == "mnist" and ds2 == "svhn":
         args.img_size = 32
         args.in_channels = 1
         args.n_classes = 10
-    elif ds1 == "cifar10" and ds2 == "stl":
+    elif ds1 == "cifar10" and ds2 == "stl10":
         args.img_size = 32
-        args.in_channels = 1
+        args.in_channels = 3
         args.n_classes = 8
     else:
         raise ValueError("invalid combination of datasets")

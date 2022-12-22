@@ -39,7 +39,7 @@ class MNIST(torch.utils.data.Subset):
         if split == "train":
             base += [
                 transforms.RandomAffine(
-                    degrees=(-30, 30), translate=(0.1, 0.2), scale=(0.8, 1.2)
+                    degrees=(-20, 20), translate=(0., 0.1), scale=(0.95, 1.05)
                 ),
             ]
 
@@ -54,10 +54,10 @@ if __name__ == "__main__":
 
     # sample
     train_samples = torch.stack(
-        [mnist_tr[i][0] for i in torch.randperm(len(mnist_tr))[:16]]
+        [mnist_tr[i][0] for i in torch.randperm(len(mnist_tr))[:64]]
     )
     test_samples = torch.stack(
-        [mnist_te[i][0] for i in torch.randperm(len(mnist_te))[:16]]
+        [mnist_te[i][0] for i in torch.randperm(len(mnist_te))[:64]]
     )
 
     assert train_samples.max() <= 1 and train_samples.min() >= 0

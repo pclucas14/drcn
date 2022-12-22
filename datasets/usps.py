@@ -39,7 +39,7 @@ class USPS(torch.utils.data.Subset):
         if split == "train":
             base += [
                 transforms.RandomAffine(
-                    degrees=(-30, 30), translate=(0.1, 0.2), scale=(0.8, 1.2)
+                    degrees=(-20, 20), translate=(0., 0.1), scale=(0.8, 1.2),
                 ),
             ]
 
