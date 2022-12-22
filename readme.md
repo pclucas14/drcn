@@ -50,9 +50,9 @@ We see a similar trend as in the paper, where DRCN is doing a bit better. Note t
 
 
 ## Overall Comments
-a) The paper is surprisingly uninformative as to which augmentations to use, and which noise levels for the denoising objective. From my limited experimentation (and prior work in self-supervised visual learning), augmentations have a big impact on downstream peformance, and the aug. parameters (e.g. rotation angle, translation scale, how to infill pixels) is crucial for reproducibility. 
-b) A proper search over hyperparemeters and augmentations to use is required to properly evaluate whether DRCN outperforms baselines. 
-c) On cross-validation. Since we do not have any labelled data, we can only cross validate on classification performance on the source data. I found that this leads to a lot of variance across runs. For example, after 49 and 50 epochs or training, the validation accuracy on source data can be 89.21 and 89.22, but the validation accuracy on the target data is 79.xx and 71.xx. In other words, the correlation between source and target accuracy is not perfect, which leads to significant variance during the cross-validation process. This is why I find the standard deviation reported in the Tables 1 and 2 hard to believe and suspiciously small. 
+1. The paper is surprisingly uninformative as to which augmentations to use, and which noise levels for the denoising objective. From my limited experimentation (and prior work in self-supervised visual learning), augmentations have a big impact on downstream peformance, and the aug. parameters (e.g. rotation angle, translation scale, how to infill pixels) is crucial for reproducibility. 
+2.  A proper search over hyperparemeters and augmentations to use is required to properly evaluate whether DRCN outperforms baselines. 
+3.  On cross-validation. Since we do not have any labelled data, we can only cross validate on classification performance on the source data. I found that this leads to a lot of variance across runs. For example, after 49 and 50 epochs or training, the validation accuracy on source data can be 89.21 and 89.22, but the validation accuracy on the target data is 79.xx and 71.xx. In other words, the correlation between source and target accuracy is not perfect, which leads to significant variance during the cross-validation process. This is why I find the standard deviation reported in the Tables 1 and 2 hard to believe and suspiciously small. 
 
 
 ## Modifications from the original paper 
