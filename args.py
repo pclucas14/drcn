@@ -34,6 +34,7 @@ def get_args():
     parser.add_argument("--lamb", type=float, default=0.7)
     parser.add_argument("--epochs", type=int, default=50)
     parser.add_argument("--lr", type=float, default=3e-4)
+    parser.add_argument("--weight_decay", type=float, default=5e-6)
     parser.add_argument("--learned_tgt_norm", type=int, default=0)
     parser.add_argument("--max_grad_norm", type=float, default=1)
     parser.add_argument("--batch_size", type=int, default=512)
