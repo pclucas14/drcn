@@ -5,6 +5,9 @@ from pytorch_lightning import LightningModule
 from collections import defaultdict
 
 class Encoder(nn.Module):
+    """
+    Encoder Architecture described in the paper
+    """
     def __init__(self, img_size, in_channels, fc4, fc5):
         super().__init__()
         
@@ -45,6 +48,9 @@ class Encoder(nn.Module):
 
 
 class Decoder(nn.Module):
+    """
+    Decoder Architecture described in the paper
+    """
     def __init__(self, img_size, out_channels, fc4, fc5):
         super().__init__()
         
@@ -103,16 +109,16 @@ class ImageModel(LightningModule):
         self.ce_loss = F.cross_entropy
 
         # --- ** new ** : target data learnable normalization
-        tgt_shift = torch.zeros(1, args.in_channels, 1, 1)
-        tgt_scale = torch.ones(1, args.in_channels, 1, 1)
         if args.learned_tgt_norm:
-            self.tgt_shift = nn.Parameter(tgt_shift)
-            self.tgt_scale = nn.Parameter(tgt_scale)
+            self.tgt_shift = nn.Parameter(torch.zeros(1, args.in_channels, 1, 1))
+            self.tgt_scale = nn.Parameter(torch.ones(1, args.in_channels, 1, 1))
         else:
-            self.tgt_shift = 0
-            self.tgt_scale = 1
+            self.tgt_shift, self.tgt_scale = 0, 1
 
     def encode(self, x, src=True):
+        """
+        Wrapper over encoder model. Enables for learnable normalization of target data
+        """
         if isinstance(src, bool) and src: 
             x = (x - self.tgt_shift) * self.tgt_scale
         elif isinstance(src, torch.Tensor) and (~src).any():
@@ -127,6 +133,9 @@ class ImageModel(LightningModule):
         )
     
     def noisy(self, x):
+        """
+        Noise function for denoising objective
+        """
         gaussian_x = x + torch.rand_like(x) * self.args.noise_std
         mask = torch.bernoulli(torch.ones_like(x) - self.args.noise_p_drop)
         return gaussian_x * mask

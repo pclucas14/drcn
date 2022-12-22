@@ -29,6 +29,7 @@ python pl_train --source_dataset <ds_name> --target_dataset <ds_Name> --method <
 | DRCN (paper)        | 91.8         | 73.7          | 82.0          | 40.0          | 58.9         | 66.4        | 
 | DRCN (reimp)        | 91.8         | 94.5          | 73.4          | 24.0          | 53.8         | 66.5        |
 
+I used 25, 50, and 100 epochs for the 3 dataset pairs.
 
 1. The <u>reproduced baseline numbers are much higher than the ones in the paper</u>. Given that I performed no hyperparameter tuning whatsoever, a likely explanation is that the authors of the paper did not spend much time into tuning the baselines, but did spend time tuning the proposed method.
 2. The SVHN -> MNIST experiments (both in baselines and DRCN) are underperforming. I suspect that is issue are the augmentations and noise used during training. I say this because trying different augmentations (different levels of rotation / translation) and different noise levels seems to have a strong impact on the MNIST SVHN pair. I used the same augmentations across dataset pairs but using custom ones for each pair will boost these numbers. 
